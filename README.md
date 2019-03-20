@@ -3,6 +3,7 @@ XBMC service plugin for der RaspiCar carpc to automate rearcam, power, touchscre
 
 
 Planned features:
+
 POWER MANAGEMANT:
 - automatic shutdown timed when ignition off
 - Delay the shutdown by touch screen. For example, for a stop at the gas station.
