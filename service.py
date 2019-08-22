@@ -89,7 +89,7 @@ class Main(object):
 				if power == TRUE:
 					self.power_back = TRUE
 					break
-			if power_back == FALSE:
+			if self.power_back == FALSE:
 				xbmc.log("CarPCButler turn off Pi! %s" %time.time(), level=xbmc.LOGWARNING)
 				os.system("sudo shutdown -h now")
 				GPIO.output(OUT_BACKUP_IGN_PIN, 0)
