@@ -97,7 +97,7 @@ class Main(object):
 				wb_dialog = xbmc.Dialog()
 				wb_dialog.notification('CarPCButler', 'Willkommen zuück!', xbmcgui.NOTIFICATION_INFO, 5000)
 				
-		if self.power_dialog == FALSE and not power_back: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
+		elif self.power_dialog == FALSE and not power_back: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			self.shut_down
 					
 	def shut_down(self):
