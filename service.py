@@ -114,12 +114,12 @@ class Main(object):
 		GPIO.output(OUT_PWR_DISPLAY, 0)
 		
 	def rearcam(self):
-		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.rearcam) == 1: #Konrolle ob das plugin so heisst
+		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.pidash) == 1:
 			#Hier mit Rearcam funktion weitermachen
 		else:
 			fault_dialog = xbmc.Dialog()
-			fault_dialog.notification('CarPCButler', 'Rearcam PlugIn nicht installiert!', xbmcgui.NOTIFICATION_ERROR, 5000)
-			xbmc.log("CarPCButler: Rearcam Plugin not installed! Please install the Plugin for more information visit www,raspicar-projekt.de %s" %time.time(), level=xbmc.LOGWARNING)
+			fault_dialog.notification('CarPCButler', 'Plugin piDash nicht installiert!', xbmcgui.NOTIFICATION_ERROR, 5000)
+			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin for more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 
 if __name__ == '__main__':
