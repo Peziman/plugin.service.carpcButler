@@ -21,6 +21,8 @@ class Main(object):
 	power_dialog = None	#Meldefenster in Kodi
 	power_display = True	#BOOL Display AN
 	monitor = xbmc.Monitor()
+	wait_time = 600
+	power_back = FALSE
 	
 	def __init__(self):
 		pass
@@ -64,11 +66,38 @@ class Main(object):
 			time.sleep(0.1)
 		
 		self.stopped = True
+		
+	def power_is_on(self):
+		ignore_ign = False
+		if power_dialog:
+			power_dialog.close()
+			power_dialog = NONE
+	
+	def power_is_off(self):
+		self.power_dialog = xbmcgui.Dialog()
+		self.power_dialog_create = power_dialog.yesno("CarPCButler", "Zündung ist Aus!", "Machen sie einen Tankstopp?", "Soll ich auf Sie warten?", "Ja Warte", "Nein", 10000) #Stringdatei für andere Sprachen erstellen
+		
+		if self.power_dialog == TRUE:
+			self.ignore_IGN = TRUE
+			power_dialog.close()
+			power_dialog = NONE
+			#self.trigger_display def erstellen um Display umzuschalten
+			p = 0
+			while self.wait_time < p:
+				p = p + 1
+				time.sleep(1)
+				if power == TRUE:
+					self.power_back = TRUE
+					break
+			if power_back == FALSE:
+				xbmc.log("CarPCButler turn off Pi! %s" %time.time(), level=xbmc.LOGWARNING)
+				os.system("sudo shutdown -h now")
+				GPIO.output(OUT_BACKUP_IGN_PIN, 0)
+					
 
 
 
 if __name__ == '__main__':
-	dialog = xbmcgui.Dialog()
 	xbmc.log("Service CarPCButler started! %s" %time.time(), level=xbmc.LOGNOTICE)
 	main = Main()
 	main.start()
