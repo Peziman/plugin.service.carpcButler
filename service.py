@@ -65,6 +65,7 @@ class Main(object):
 				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepared... %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.power_is_off()	
 			self.rearcam
+			self.daynight
 			
 			time.sleep(0.1)
 
@@ -135,7 +136,11 @@ class Main(object):
 			fault_dialog.notification('CarPCButler', 'Plugin piDash nicht installiert!', xbmcgui.NOTIFICATION_ERROR, 5000)
 			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin for more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
-
+	def daynight(self):
+		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch')) == 1:
+			addon_xtouch = xbmcaddon.Addon(id='plugin.program.carpc-xtouch')
+			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
+					  
 if __name__ == '__main__':
 	xbmc.log("Service CarPCButler started! %s" %time.time(), level=xbmc.LOGNOTICE)
 	main = Main()
