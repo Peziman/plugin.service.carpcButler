@@ -38,7 +38,7 @@ class Main(object):
 		#Hier konnte man noch eine Resume-Funktion einfugen
 		if self.stopped == True: #warten bis thread beendet ist und danach weiter
 			GPIO.cleanup()
-			xbmc.log("Service CarPCButler beendet! %s" %time.time(), level=xbmc.LOGNOTICE)
+			xbmc.log("Service CarPCButler stopped! %s" %time.time(), level=xbmc.LOGNOTICE)
 		
 		
 	def gpio_checker(self):	
@@ -64,7 +64,7 @@ class Main(object):
 				self.power_is_on()	
 			elif power == False:
 				GPIO.output(OUT_LED_RUN_PIN, 0)
-				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepared... %s" %time.time(), level=xbmc.LOGNOTICE)
+				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepare... %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.power_is_off()	
 			self.rearcam
 			self.daynight
@@ -82,7 +82,7 @@ class Main(object):
 	
 	def power_is_off(self):
 		self.power_dialog = xbmcgui.Dialog()
-		self.power_dialog_create = power_dialog.yesno("CarPCButler", "Zündung ist Aus!", "Machen sie einen Tankstopp?", "Soll ich auf Sie warten?", "Ja Warte", "Nein", 10000) #Stringdatei für andere Sprachen erstellen
+		self.power_dialog_create = power_dialog.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
 		self.ignore_ign = TRUE
 		power_back = FALSE
 		
@@ -106,7 +106,7 @@ class Main(object):
 				GPIO.output(OUT_PWR_DISPLAY, 1)
 				self.ignore_ign = FALSE
 				wb_dialog = xbmc.Dialog()
-				wb_dialog.notification('CarPCButler', 'Willkommen zuück!', xbmcgui.NOTIFICATION_INFO, 5000) #Stringdatei für andere Sprachen erstellen
+				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
 				
 		elif self.power_dialog == FALSE and power_back == TRUE: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			self.shut_down
@@ -135,7 +135,7 @@ class Main(object):
 				
 		else:
 			fault_dialog = xbmc.Dialog()
-			fault_dialog.notification('CarPCButler', 'Plugin piDash nicht installiert!', xbmcgui.NOTIFICATION_ERROR, 5000)
+			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30007]", xbmcgui.NOTIFICATION_ERROR, 5000)
 			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin for more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 	def daynight(self):
@@ -154,6 +154,10 @@ class Main(object):
 				xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
 			elif light_switch == TRUE and autoswitch:
 				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
+		else:
+			fault_dialog = xbmc.Dialog()
+			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30008]", xbmcgui.NOTIFICATION_ERROR, 5000)
+			xbmc.log("CarPCButler: Plugin xTouch not installed! Please install the Plugin for more information visit https://raspicarprojekt.de %s" %time.time(), level=xbmc.LOGWARNING)
 				
 					  
 if __name__ == '__main__':
