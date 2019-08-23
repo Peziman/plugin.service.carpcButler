@@ -22,6 +22,7 @@ class Main(object):
 	power_display = True	#BOOL Display AN
 	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
 	rearcam_trigger = FALSE
+	lightswitch_trigger = FALSE
 	monitor = xbmc.Monitor()
 	wait_time = 600
 	
@@ -62,6 +63,7 @@ class Main(object):
 				GPIO.output(OUT_LED_RUN_PIN, 1)
 				self.power_is_on()	
 			elif power == False:
+				GPIO.output(OUT_LED_RUN_PIN, 0)
 				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepared... %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.power_is_off()	
 			self.rearcam
@@ -112,7 +114,7 @@ class Main(object):
 	def shut_down(self):
 		xbmc.log("CarPCButler: Shut down Pi! %s" %time.time(), level=xbmc.LOGWARNING)
 		os.system("sudo shutdown -h now")
-		GPIO.output(OUT_BACKUP_IGN_PIN, 0)
+		#GPIO.output(OUT_BACKUP_IGN_PIN, 0)
 		GPIO.output(OUT_PWR_DISPLAY, 0)
 		
 	def rearcam(self):
@@ -139,7 +141,20 @@ class Main(object):
 	def daynight(self):
 		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch')) == 1:
 			addon_xtouch = xbmcaddon.Addon(id='plugin.program.carpc-xtouch')
-			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
+			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
+			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion überbrücken
+			light_switch = GPIO.input(IN_LIGHT_PIN)
+			if light_switch == TRUE and self.lightswitch_trigger == FALSE andnot autoswitch:
+				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadnight)")
+				self.lightswitch_trigger = TRUE
+				xbmc.log("CarPCButler: Light turn on! Switch Skin to night! %s" %time.time(), level=xbmc.LOGNOTICE)
+			elif light_switch == FALSE and self.lightswitch_trigger == TRUE andnot autoswitch:
+				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadday)")
+				self.lightswitch_trigger = FALSE
+				xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
+			elif light_switch == TRUE and autoswitch:
+				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
+				
 					  
 if __name__ == '__main__':
 	xbmc.log("Service CarPCButler started! %s" %time.time(), level=xbmc.LOGNOTICE)
