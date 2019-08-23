@@ -16,4 +16,4 @@ DAY-NIGHT SWITCHING:
 - Day / night switching by photoelectrical sensor controller or headlight switch.
 
 WORK IN PROGRESS:
-The plugin is not working yet!
+The Addon is ready, but not tested in the moment....
