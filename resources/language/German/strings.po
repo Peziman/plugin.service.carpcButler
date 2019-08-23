@@ -1,0 +1,53 @@
+# Kodi Media Center language file
+# Addon Name: CarPCButler
+# Addon id: plugin.service.carpcButler
+# Addon Provider: Peziman
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Addons\n"
+"Report-Msgid-Bugs-To: peziman2000@gmail.com\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "CarpcButler"
+msgstr "CarpcButler"
+
+msgctxt "#30001"
+msgid "Ignition turned off!"
+msgstr "Zundung wurde abgeschaltet!"
+
+msgctxt "#30002"
+msgid "Make it a pit stop?"
+msgstr "Machen Sie einen Tankstopp?"
+
+msgctxt "#30003"
+msgid "Should I wait for you?"
+msgstr "Soll Ich auf Sie warten?"
+
+msgctxt "#30004"
+msgid "Please wait"
+msgstr "Ja, warte"
+
+msgctxt "#30005"
+msgid "No"
+msgstr "Nein"
+
+msgctxt "#30006"
+msgid "Welcome Back!"
+msgstr "Willkommen zuruck!"
+
+msgctxt "#30007"
+msgid "Plugin PiDash not installed!"
+msgstr "Plugin PiDash nicht installiert!"
+
+msgctxt "#30008"
+msgid "Plugin xTouch not installed!"
+msgstr "Plugin xTouch nicht installiert!"
