@@ -21,6 +21,7 @@ class Main(object):
 	power_dialog = None	#Meldefenster in Kodi
 	power_display = True	#BOOL Display AN
 	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
+	rearcam_trigger = FALSE
 	monitor = xbmc.Monitor()
 	wait_time = 600
 	
@@ -115,7 +116,20 @@ class Main(object):
 		
 	def rearcam(self):
 		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.pidash) == 1:
-			#Hier mit Rearcam funktion weitermachen
+			addon_rear = xbmcaddon.Addon(id='plugin.program.pidash')
+			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
+			reverse_switch = GPIO.input(IN_IGN_PIN)
+			if reverse_switch == TRUE and self.rearcam_trigger == FALSE:
+				xbmc.executebuiltin("XBMC.RunScript(" + addonrear_path + "/addon.py)")
+				self.rearcam_trigger = TRUE
+				xbmc.log("CarPCButler: Reverse gear in detected! Start Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
+				time.sleep(0.1)
+			elif reverse_switch == FALSE and self.rearcam_trigger == TRUE:
+				xbmc.executebuiltin("XBMC.StopScript(" + addonrear_path + "/addon.py)")
+				self.rearcam_trigger = FALSE
+				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
+				time.sleep(0.1)
+				
 		else:
 			fault_dialog = xbmc.Dialog()
 			fault_dialog.notification('CarPCButler', 'Plugin piDash nicht installiert!', xbmcgui.NOTIFICATION_ERROR, 5000)
