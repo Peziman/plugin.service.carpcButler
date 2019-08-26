@@ -132,6 +132,8 @@ class Main(object):
 				self.rearcam_trigger = FALSE
 				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
+			elif reverse_switch == TRUE and self.rearcam_trigger == TRUE:
+				pass
 				
 		else:
 			fault_dialog = xbmc.Dialog()
