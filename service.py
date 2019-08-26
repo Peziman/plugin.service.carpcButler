@@ -108,7 +108,7 @@ class Main(object):
 				wb_dialog = xbmc.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
 				
-		elif self.power_dialog == FALSE and power_back == TRUE: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
+		elif self.power_dialog == FALSE and power_back == FALSE: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			self.shut_down
 					
 	def shut_down(self):
