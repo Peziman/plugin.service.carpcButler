@@ -138,7 +138,7 @@ class Main(object):
 		else:
 			fault_dialog = xbmc.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30007]", xbmcgui.NOTIFICATION_ERROR, 5000)
-			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin for more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
+			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 	def daynight(self):
 		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch')) == 1:
@@ -159,7 +159,7 @@ class Main(object):
 		else:
 			fault_dialog = xbmc.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30008]", xbmcgui.NOTIFICATION_ERROR, 5000)
-			xbmc.log("CarPCButler: Plugin xTouch not installed! Please install the Plugin for more information visit https://raspicarprojekt.de %s" %time.time(), level=xbmc.LOGWARNING)
+			xbmc.log("CarPCButler: Plugin xTouch not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=913 %s" %time.time(), level=xbmc.LOGWARNING)
 				
 					  
 if __name__ == '__main__':
