@@ -146,15 +146,15 @@ class Main(object):
 			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
 			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion überbrücken
 			light_switch = GPIO.input(IN_LIGHT_PIN)
-			if light_switch == TRUE and self.lightswitch_trigger == FALSE andnot autoswitch:
+			if light_switch == TRUE and self.lightswitch_trigger == FALSE and autoswitch == FALSE:
 				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadnight)")
 				self.lightswitch_trigger = TRUE
 				xbmc.log("CarPCButler: Light turn on! Switch Skin to night! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == FALSE and self.lightswitch_trigger == TRUE andnot autoswitch:
+			elif light_switch == FALSE and self.lightswitch_trigger == TRUE and autoswitch == FALSE:
 				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadday)")
 				self.lightswitch_trigger = FALSE
 				xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == TRUE and autoswitch:
+			elif light_switch == TRUE and autoswitch == TRUE:
 				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
 		else:
 			fault_dialog = xbmc.Dialog()
