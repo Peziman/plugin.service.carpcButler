@@ -21,8 +21,8 @@ class Main(object):
 	power_dialog = None	#Meldefenster in Kodi
 	power_display = True	#BOOL Display AN
 	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
-	rearcam_trigger = FALSE
-	lightswitch_trigger = FALSE
+	rearcam_trigger = False
+	lightswitch_trigger = False
 	monitor = xbmc.Monitor()
 	wait_time = 600
 	
@@ -78,29 +78,29 @@ class Main(object):
 		self.ignore_ign = False
 		if self.power_dialog:
 			self.power_dialog.close()
-			self.power_dialog = NONE
+			self.power_dialog = None
 	
 	def power_is_off(self):
 		self.power_dialog = xbmcgui.Dialog()
 		self.power_dialog_create = power_dialog.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
-		self.ignore_ign = TRUE
-		power_back = FALSE
+		self.ignore_ign = True
+		power_back = False
 		
-		if self.power_dialog == TRUE: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
+		if self.power_dialog == True: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
 			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
 			#self.power_dialog.close()
-			self.power_dialog = NONE
+			self.power_dialog = None
 			GPIO.output(OUT_PWR_DISPLAY, 0)
 			p = 0
 			while self.wait_time < p:
-				if GPIO.input(IN_IGN_PIN) == TRUE: #Wenn die Zundung innerhalb der 10Min wieder da ist, breche die Schleife ab
+				if GPIO.input(IN_IGN_PIN) == True: #Wenn die Zundung innerhalb der 10Min wieder da ist, breche die Schleife ab
 					xbmc.log("CarPCButler: Car IGN turn on! %s" %time.time(), level=xbmc.LOGNOTICE)
-					power_back = TRUE
+					power_back = True
 					break
 				else:
 					p = p + 1
 					time.sleep(1)
-			if power_back == FALSE:
+			if power_back == False:
 				self.shut_down
 			else:
 				GPIO.output(OUT_PWR_DISPLAY, 1)
@@ -108,7 +108,7 @@ class Main(object):
 				wb_dialog = xbmc.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
 				
-		elif self.power_dialog == FALSE and power_back == FALSE: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
+		elif self.power_dialog == False and power_back == False: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			self.shut_down
 					
 	def shut_down(self):
@@ -122,17 +122,17 @@ class Main(object):
 			addon_rear = xbmcaddon.Addon(id='plugin.program.pidash')
 			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
 			reverse_switch = GPIO.input(IN_IGN_PIN)
-			if reverse_switch == TRUE and self.rearcam_trigger == FALSE:
+			if reverse_switch == True and self.rearcam_trigger == False:
 				xbmc.executebuiltin("XBMC.RunScript(" + addonrear_path + "/addon.py)")
-				self.rearcam_trigger = TRUE
+				self.rearcam_trigger = True
 				xbmc.log("CarPCButler: Reverse gear in detected! Start Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
-			elif reverse_switch == FALSE and self.rearcam_trigger == TRUE:
+			elif reverse_switch == False and self.rearcam_trigger == True:
 				xbmc.executebuiltin("XBMC.StopScript(" + addonrear_path + "/addon.py)")
-				self.rearcam_trigger = FALSE
+				self.rearcam_trigger = False
 				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
-			elif reverse_switch == TRUE and self.rearcam_trigger == TRUE:
+			elif reverse_switch == True and self.rearcam_trigger == True:
 				pass
 				
 		else:
@@ -146,15 +146,15 @@ class Main(object):
 			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
 			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion überbrücken
 			light_switch = GPIO.input(IN_LIGHT_PIN)
-			if light_switch == TRUE and self.lightswitch_trigger == FALSE and autoswitch == FALSE:
+			if light_switch == True and self.lightswitch_trigger == False and autoswitch == False:
 				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadnight)")
-				self.lightswitch_trigger = TRUE
+				self.lightswitch_trigger = True
 				xbmc.log("CarPCButler: Light turn on! Switch Skin to night! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == FALSE and self.lightswitch_trigger == TRUE and autoswitch == FALSE:
+			elif light_switch == False and self.lightswitch_trigger == True and autoswitch == False:
 				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadday)")
-				self.lightswitch_trigger = FALSE
+				self.lightswitch_trigger = False
 				xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == TRUE and autoswitch == TRUE:
+			elif light_switch == True and autoswitch == True:
 				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
 		else:
 			fault_dialog = xbmc.Dialog()
