@@ -23,7 +23,6 @@ class Main(object):
 	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
 	rearcam_trigger = False
 	lightswitch_trigger = False
-	monitor = xbmc.Monitor()
 	wait_time = 600
 	
 	def __init__(self):
@@ -33,6 +32,7 @@ class Main(object):
 		self.thread = Thread(target=self.gpio_checker)
 		self.thread.setDaemon(True)
 		self.thread.start()
+		monitor = xbmc.Monitor()
 		monitor.waitForAbort() #laut Wiki bleibt hier die Schleife stehen bis Kodi beendet wird
 		self.run = False
 		#Hier konnte man noch eine Resume-Funktion einfugen
@@ -81,14 +81,14 @@ class Main(object):
 			self.power_dialog = None
 	
 	def power_is_off(self):
-		self.power_dialog = xbmcgui.Dialog()
-		self.power_dialog_create = power_dialog.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
+		#self.power_dialog = xbmcgui.Dialog()
+		self.power_dialog = xbmcgui.Dialog.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
 		self.ignore_ign = True
 		power_back = False
 		
 		if self.power_dialog == True: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
 			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
-			#self.power_dialog.close()
+			self.power_dialog.close()
 			self.power_dialog = None
 			GPIO.output(OUT_PWR_DISPLAY, 0)
 			p = 0
@@ -141,10 +141,10 @@ class Main(object):
 			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 	def daynight(self):
-		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch')) == 1:
+		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch) == 1:
 			addon_xtouch = xbmcaddon.Addon(id='plugin.program.carpc-xtouch')
 			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
-			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion überbrücken
+			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion uberbrucken
 			light_switch = GPIO.input(IN_LIGHT_PIN)
 			if light_switch == True and self.lightswitch_trigger == False and autoswitch == False:
 				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadnight)")
