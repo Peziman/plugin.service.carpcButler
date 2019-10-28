@@ -70,8 +70,8 @@ class Main(object):
 			else:
 				pass
 			
-			self.rearcam
-			self.daynight
+			self.rearcam()
+			self.daynight()
 			
 			time.sleep(0.1)
 
@@ -108,7 +108,7 @@ class Main(object):
 					p = p + 1
 					time.sleep(1)
 			if self.power_back == False:
-				self.shut_down
+				self.shut_down()
 			else:
 				GPIO.output(OUT_PWR_DISPLAY, 1)
 				self.ignore_ign = FALSE
@@ -116,7 +116,7 @@ class Main(object):
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
 				
 		elif self.power_dialog == False and self.power_back == False: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
-			self.shut_down
+			self.shut_down()
 					
 	def shut_down(self):
 		xbmc.log("CarPCButler: Shut down Pi! %s" %time.time(), level=xbmc.LOGWARNING)
