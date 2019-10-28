@@ -86,11 +86,11 @@ class Main(object):
 			self.power_dialog = None
 	
 	def power_is_off(self):
-		#self.power_dialog = xbmcgui.Dialog()
-		self.power_dialog = xbmcgui.Dialog.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
+		self.power_dia = xbmcgui.Dialog()
+		self.power_dialog = self.power_dia.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
 		self.ignore_ign = True
 		self.power_dialog_pass = True
-		power_back = False
+		self.power_back = False
 		
 		if self.power_dialog == True: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
 			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
@@ -101,13 +101,13 @@ class Main(object):
 			while self.wait_time < p:
 				if GPIO.input(IN_IGN_PIN) == True: #Wenn die Zundung innerhalb der 10Min wieder da ist, breche die Schleife ab
 					xbmc.log("CarPCButler: Car IGN turn on! %s" %time.time(), level=xbmc.LOGNOTICE)
-					power_back = True
+					self.power_back = True
 					self.power_dialog_pass = False
 					break
 				else:
 					p = p + 1
 					time.sleep(1)
-			if power_back == False:
+			if self.power_back == False:
 				self.shut_down
 			else:
 				GPIO.output(OUT_PWR_DISPLAY, 1)
@@ -115,7 +115,7 @@ class Main(object):
 				wb_dialog = xbmc.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
 				
-		elif self.power_dialog == False and power_back == False: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
+		elif self.power_dialog == False and self.power_back == False: #Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			self.shut_down
 					
 	def shut_down(self):
@@ -164,7 +164,7 @@ class Main(object):
 			elif light_switch == True and autoswitch == True and self.lightswitch_trigger == False:
 				self.lightswitch_trigger = True
 				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
-			else  light_switch == True and autoswitch == True and self.lightswitch_trigger == True:
+			elif  light_switch == True and autoswitch == True and self.lightswitch_trigger == True:
 				self.lightswitch_trigger = False
 		else:
 			fault_dialog = xbmc.Dialog()
