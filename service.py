@@ -164,8 +164,9 @@ class Main(object):
 			elif light_switch == True and autoswitch == True and self.lightswitch_trigger == False:
 				self.lightswitch_trigger = True
 				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif  light_switch == True and autoswitch == True and self.lightswitch_trigger == True:
+			elif  light_switch == False and autoswitch == True and self.lightswitch_trigger == True:
 				self.lightswitch_trigger = False
+				xbmc.log("CarPCButler: Light turn off but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
 		else:
 			fault_dialog = xbmc.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30008]", xbmcgui.NOTIFICATION_ERROR, 5000)
