@@ -52,26 +52,26 @@ class Main(object):
 		GPIO.setup(IN_LIGHT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		#Outputs
 		GPIO.setup(OUT_BACKUP_IGN_PIN, GPIO.OUT)
-		GPIO.output(OUT_BACKUP_IGN_PIN, 1)
+		GPIO.output(OUT_BACKUP_IGN_PIN, GPIO.HIGH)
 		GPIO.setup(OUT_PWR_DISPLAY, GPIO.OUT)
-		GPIO.output(OUT_PWR_DISPLAY, 1)
+		GPIO.output(OUT_PWR_DISPLAY, GPIO.HIGH)
 		GPIO.setup(OUT_LED_RUN_PIN, GPIO.OUT)
-		GPIO.output(OUT_LED_RUN_PIN, 0)
+		GPIO.output(OUT_LED_RUN_PIN, GPIO.LOW)
 		
 		while self.run:
 			power = GPIO.input(IN_IGN_PIN)
 			if power == True:
-				GPIO.output(OUT_LED_RUN_PIN, 1)
+				GPIO.output(OUT_LED_RUN_PIN, GPIO.HIGH)
 				self.power_is_on()	
 			elif power == False and self.power_dialog_pass == False:
-				GPIO.output(OUT_LED_RUN_PIN, 0)
+				GPIO.output(OUT_LED_RUN_PIN, GPIO.LOW)
 				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepare... %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.power_is_off()
 			else:
 				pass
 			
-			self.rearcam()
-			self.daynight()
+			#self.rearcam()
+			#self.daynight()
 			
 			time.sleep(0.1)
 
@@ -86,8 +86,8 @@ class Main(object):
 			self.power_dialog = None
 	
 	def power_is_off(self):
-		self.power_dia = xbmcgui.Dialog()
-		self.power_dialog = self.power_dia.yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
+		#self.pwr_dialog = xbmcgui.Dialog()
+		self.power_dialog = xbmcgui.Dialog().yesno("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30001]", "$ADDON[plugin.service.carpcButler 30002]", "$ADDON[plugin.service.carpcButler 30003]", "$ADDON[plugin.service.carpcButler 30004]", "$ADDON[plugin.service.carpcButler 30005]", 10000) 
 		self.ignore_ign = True
 		self.power_dialog_pass = True
 		self.power_back = False
@@ -95,8 +95,8 @@ class Main(object):
 		if self.power_dialog == True: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
 			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
 			#self.power_dialog.close()
-			self.power_dialog = None
-			GPIO.output(OUT_PWR_DISPLAY, 0)
+			#self.power_dialog = None
+			GPIO.output(OUT_PWR_DISPLAY, GPIO.LOW)
 			p = 0
 			while self.wait_time < p:
 				if GPIO.input(IN_IGN_PIN) == True: #Wenn die Zundung innerhalb der 10Min wieder da ist, breche die Schleife ab
@@ -110,7 +110,7 @@ class Main(object):
 			if self.power_back == False:
 				self.shut_down()
 			else:
-				GPIO.output(OUT_PWR_DISPLAY, 1)
+				GPIO.output(OUT_PWR_DISPLAY, GPIO.HIGH)
 				self.ignore_ign = FALSE
 				wb_dialog = xbmc.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
@@ -121,14 +121,14 @@ class Main(object):
 	def shut_down(self):
 		xbmc.log("CarPCButler: Shut down Pi! %s" %time.time(), level=xbmc.LOGWARNING)
 		os.system("sudo shutdown -h now")
-		#GPIO.output(OUT_BACKUP_IGN_PIN, 0)
-		GPIO.output(OUT_PWR_DISPLAY, 0)
+		#GPIO.output(OUT_BACKUP_IGN_PIN, GPIO.LOW)
+		GPIO.output(OUT_PWR_DISPLAY, GPIO.LOW)
 		
 	def rearcam(self):
-		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.pidash) == 1:
+		if xbmc.getCondVisibility('System.HasAddon(plugin.program.pidash)') == 1:
 			addon_rear = xbmcaddon.Addon(id='plugin.program.pidash')
 			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
-			reverse_switch = GPIO.input(IN_IGN_PIN)
+			reverse_switch = GPIO.input(IN_REVERSE_PIN)
 			if reverse_switch == True and self.rearcam_trigger == False:
 				xbmc.executebuiltin("XBMC.RunScript(" + addonrear_path + "/addon.py)")
 				self.rearcam_trigger = True
@@ -148,7 +148,7 @@ class Main(object):
 			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 	def daynight(self):
-		if xbmc.getCondVisibility('System.HasAddon(%s)' %plugin.program.carpc-xtouch) == 1:
+		if xbmc.getCondVisibility('System.HasAddon(plugin.program.carpc-xtouch)') == 1:
 			addon_xtouch = xbmcaddon.Addon(id='plugin.program.carpc-xtouch')
 			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
 			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion uberbrucken
