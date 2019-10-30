@@ -137,7 +137,7 @@ class Main(object):
 				xbmc.log("CarPCButler: Reverse gear in detected! Start Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
 			elif reverse_switch == False and self.rearcam_trigger == True:
-				xbmc.executebuiltin("XBMC.StopScript(" + addonrear_path + "/addon.py)")
+				xbmc.executebuiltin("Action(close,1200)")
 				self.rearcam_trigger = False
 				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
