@@ -11,7 +11,7 @@ OUT_LED_RUN_PIN		= 14	#Anzeige Pi lauft
 IN_IGN_PIN		= 16	#Signal Zundung ist an
 IN_LIGHT_PIN		= 17	#Signal Dammerungsschalter
 IN_REVERSE_PIN		= 18	#Signal Ruckwartsgang
-OUT_BACKUP_IGN_PIN	= 22	#Uberbruckung Herrunterfahren
+OUT_BACKUP_IGN_PIN	= 20	#Uberbruckung Herrunterfahren
 OUT_PWR_DISPLAY		= 24	#Display Hintergrundbeleuchtung -> Soll nach gewisser Zeit ausschalten wenn in uberbruckung
 
 class Main(object):
@@ -22,9 +22,10 @@ class Main(object):
 	power_dialog_pass = False
 	power_display = True	#BOOL Display AN
 	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
-	rearcam_trigger = False
-	lightswitch_trigger = False
-	wait_time = 600
+	rearcam_trigger = False	#Ruckfahrkamera ist aktiv
+	lightswitch_trigger = False	#Licht ist aktiv
+	wait_time = 600			#Wartezeit bei Tankstop in Sekunden
+	laststate_play = False
 	
 	def __init__(self):
 		pass
@@ -66,12 +67,13 @@ class Main(object):
 			elif power == False and self.power_dialog_pass == False:
 				GPIO.output(OUT_LED_RUN_PIN, GPIO.LOW)
 				xbmc.log("CarPCButler: Car IGN turned off! Shut down will be prepare... %s" %time.time(), level=xbmc.LOGNOTICE)
+				self.checkplayer()
 				self.power_is_off()
 			else:
 				pass
 			
-			#self.rearcam()
-			#self.daynight()
+			self.rearcam()
+			self.daynight()
 			
 			time.sleep(0.1)
 
@@ -105,6 +107,10 @@ class Main(object):
 					self.power_is_on()
 					break
 				else:
+					if GPIO.input(OUT_LED_RUN_PIN) == True:
+						GPIO.output(OUT_LED_RUN_PIN, GPIO.LOW)
+					else:
+						GPIO.output(OUT_LED_RUN_PIN, GPIO.HIGH)
 					p = p + 1
 				time.sleep(1)
 			if self.power_back == False:
@@ -115,10 +121,14 @@ class Main(object):
 				self.ignore_ign = False
 				wb_dialog = xbmcgui.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
+				self.player_resume()
 				
 		else:		#Wenn "Nein" gedruckt wird, fahre das System sofort herunter
-			xbmc.log("shut down by User! %s" %time.time(), level=xbmc.LOGNOTICE)
-			self.shut_down()
+			if GPIO.input(IN_IGN_PIN) == False: #Wenn die Zundung sofort wieder da ist schalte CarPC nicht ab.
+				xbmc.log("shut down by User! %s" %time.time(), level=xbmc.LOGNOTICE)
+				self.shut_down()
+			else:
+				pass
 					
 	def shut_down(self):
 		xbmc.log("CarPCButler: Shut down Pi! %s" %time.time(), level=xbmc.LOGWARNING)
@@ -132,12 +142,13 @@ class Main(object):
 			addon_rear_path = addon_rear.getAddonInfo('path').decode("utf-8")
 			reverse_switch = GPIO.input(IN_REVERSE_PIN)
 			if reverse_switch == True and self.rearcam_trigger == False:
-				xbmc.executebuiltin("XBMC.RunScript(" + addonrear_path + "/addon.py)")
+				xbmc.executebuiltin("XBMC.RunScript(" + addon_rear_path + "/addon.py)")
 				self.rearcam_trigger = True
 				xbmc.log("CarPCButler: Reverse gear in detected! Start Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
 			elif reverse_switch == False and self.rearcam_trigger == True:
-				#xbmc.executebuiltin("Action(close,1200)")
+				#xbmc.executebuiltin("StopScript(plugin.program.pidash)")
+				#xbmc.executebuiltin("Dialog.Close(all)")
 				self.rearcam_trigger = False
 				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
@@ -175,11 +186,25 @@ class Main(object):
 			fault_dialog = xbmcgui.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30008]", xbmcgui.NOTIFICATION_ERROR, 5000)
 			xbmc.log("CarPCButler: Plugin xTouch not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=913 %s" %time.time(), level=xbmc.LOGWARNING)
-				
+			
+	def checkplayer(self):
+		player = xbmc.Player()
+		if player.isPlaying():
+			self.laststate_play = True
+			player.pause()
+		else:
+			pass
+
+	def player_resume(self):
+		player = xbmc.Player()
+		if self.laststate_play == True:
+			self.laststate_play = False	
+			player.pause()
+		else:
+			pass	
 					  
 if __name__ == '__main__':
 	xbmc.log("Service CarPCButler started! %s" %time.time(), level=xbmc.LOGNOTICE)
 	main = Main()
 	main.start()
 	
-
