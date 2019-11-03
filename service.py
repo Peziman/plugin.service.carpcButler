@@ -137,7 +137,7 @@ class Main(object):
 				xbmc.log("CarPCButler: Reverse gear in detected! Start Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
 			elif reverse_switch == False and self.rearcam_trigger == True:
-				xbmc.executebuiltin("Action(close,1200)")
+				#xbmc.executebuiltin("Action(close,1200)")
 				self.rearcam_trigger = False
 				xbmc.log("CarPCButler: Reverse gear out detected! Stop Plugin Pidash %s" %time.time(), level=xbmc.LOGNOTICE)
 				time.sleep(0.1)
@@ -145,32 +145,34 @@ class Main(object):
 				pass
 				
 		else:
-			fault_dialog = xbmc.Dialog()
+			fault_dialog = xbmcgui.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30007]", xbmcgui.NOTIFICATION_ERROR, 5000)
 			xbmc.log("CarPCButler: Plugin piDash not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=861 %s" %time.time(), level=xbmc.LOGWARNING)
 
 	def daynight(self):
 		if xbmc.getCondVisibility('System.HasAddon(plugin.program.carpc-xtouch)') == 1:
 			addon_xtouch = xbmcaddon.Addon(id='plugin.program.carpc-xtouch')
-			addon_xtouch_path = addon_xtouch.getAddonInfo('path').decode("utf-8")
+			addonpath_xtouch = addon_xtouch.getAddonInfo('path').decode("utf-8")
 			autoswitch = addon_xtouch.getSetting('autoswitch') # Wenn Zeit gesteuerte Umschaltung aktiv funktion uberbrucken
 			light_switch = GPIO.input(IN_LIGHT_PIN)
-			if light_switch == True and self.lightswitch_trigger == False and autoswitch == False:
-				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadnight)")
-				self.lightswitch_trigger = True
-				xbmc.log("CarPCButler: Light turn on! Switch Skin to night! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == False and self.lightswitch_trigger == True and autoswitch == False:
-				xbmc.executebuiltin("XBMC.RunScript(" + addon_xtouch_path + "/addon.py,loadday)")
-				self.lightswitch_trigger = False
-				xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif light_switch == True and autoswitch == True and self.lightswitch_trigger == False:
-				self.lightswitch_trigger = True
-				xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
-			elif  light_switch == False and autoswitch == True and self.lightswitch_trigger == True:
-				self.lightswitch_trigger = False
-				xbmc.log("CarPCButler: Light turn off but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
+			if autoswitch == "false":
+				if light_switch == True and self.lightswitch_trigger == False:
+					xbmc.executebuiltin("XBMC.RunScript(" + addonpath_xtouch + "/addon.py,loadnight)")
+					self.lightswitch_trigger = True
+					xbmc.log("CarPCButler: Light turn on! Switch Skin to night! %s" %time.time(), level=xbmc.LOGNOTICE)
+				elif light_switch == False and self.lightswitch_trigger == True:
+					xbmc.executebuiltin("XBMC.RunScript(" + addonpath_xtouch + "/addon.py,loadday)")
+					self.lightswitch_trigger = False
+					xbmc.log("CarPCButler: Light turn off! Switch Skin to day! %s" %time.time(), level=xbmc.LOGNOTICE)
+			else:
+				if light_switch == True and self.lightswitch_trigger == False:
+					self.lightswitch_trigger = True
+					xbmc.log("CarPCButler: Light turn on but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
+				elif  light_switch == False and self.lightswitch_trigger == True:
+					self.lightswitch_trigger = False
+					xbmc.log("CarPCButler: Light turn off but X-Touch is in time based auto mode.... I do nothing! %s" %time.time(), level=xbmc.LOGNOTICE)
 		else:
-			fault_dialog = xbmc.Dialog()
+			fault_dialog = xbmcgui.Dialog()
 			fault_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30008]", xbmcgui.NOTIFICATION_ERROR, 5000)
 			xbmc.log("CarPCButler: Plugin xTouch not installed! Please install the Plugin. For more information visit https://raspicarprojekt.de/showthread.php?tid=913 %s" %time.time(), level=xbmc.LOGWARNING)
 				
