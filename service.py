@@ -21,10 +21,10 @@ class Main(object):
 	power_dialog = None	#Meldefenster in Kodi
 	power_dialog_pass = False
 	power_display = True	#BOOL Display AN
-	option_rearcam = True	#Funktion Ruckfahrkamera aktiv
-	rearcam_trigger = False	#Ruckfahrkamera ist aktiv
-	lightswitch_trigger = False	#Licht ist aktiv
-	wait_time = 600			#Wartezeit bei Tankstop in Sekunden
+	option_rearcam = True	#BOOL Funktion Ruckfahrkamera aktiv
+	rearcam_trigger = False	#BOOL Ruckfahrkamera ist aktiv
+	lightswitch_trigger = False	#BOOL Licht ist aktiv
+	wait_time = 600			#INT Wartezeit bei Tankstop in Sekunden
 	laststate_play = False
 	
 	def __init__(self):
@@ -95,7 +95,7 @@ class Main(object):
 		self.power_back = False
 		
 		if power_dialog: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
-			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
+			xbmc.log("CarPCButler: shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
 			#self.power_dialog.close()
 			#self.power_dialog = None
 			GPIO.output(OUT_PWR_DISPLAY, GPIO.LOW)
@@ -114,7 +114,7 @@ class Main(object):
 					p = p + 1
 				time.sleep(1)
 			if self.power_back == False:
-				xbmc.log("Timeout.... shutdown! %s" %time.time(), level=xbmc.LOGNOTICE)
+				xbmc.log("CarPCButler: Timeout.... shutdown! %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.shut_down()
 			else:
 				GPIO.output(OUT_PWR_DISPLAY, GPIO.HIGH)
@@ -125,7 +125,7 @@ class Main(object):
 				
 		else:		#Wenn "Nein" gedruckt wird, fahre das System sofort herunter
 			if GPIO.input(IN_IGN_PIN) == False: #Wenn die Zundung sofort wieder da ist schalte CarPC nicht ab.
-				xbmc.log("shut down by User! %s" %time.time(), level=xbmc.LOGNOTICE)
+				xbmc.log("CarPCButler: Shut down by User! %s" %time.time(), level=xbmc.LOGNOTICE)
 				self.shut_down()
 			else:
 				pass
