@@ -11,7 +11,7 @@ __addonpath__ = __addon__.getAddonInfo('path').decode("utf-8")
 addon = xbmcaddon.Addon(id='plugin.service.carpcButler')
 
 OUT_LED_RUN_PIN		= int(addon.getSetting('out_led_run_pin'))		#Anzeige Pi lauft  
-IN_IGN_PIN			= int(addon.getSetting('in_ign_pin'))			#Signal Zundung ist an
+IN_IGN_PIN		= int(addon.getSetting('in_ign_pin'))			#Signal Zundung ist an
 IN_LIGHT_PIN		= int(addon.getSetting('in_light_pin'))			#Signal Dammerungsschalter
 IN_REVERSE_PIN		= int(addon.getSetting('in_reverse_pin'))		#Signal Ruckwartsgang
 OUT_BACKUP_IGN_PIN	= int(addon.getSetting('out_backup_ign_pin'))	#Ausgang Uberbruckung Spannungsversorgung
@@ -20,14 +20,14 @@ OUT_AMP_CONTROL		= int(addon.getSetting('out_amp_control'))		#Ausgang fur Versta
 
 class Main(object):
 	ignore_ign = False				#BOOL Ignoriere Herrunterfahren	
-	run = True						#BOOL thread soll laufen
+	run = True					#BOOL thread soll laufen
 	stopped = False					#BOOL thread beendet 
 	power_dialog = None				#Meldefenster in Kodi
 	power_dialog_pass = False
-	power_display = True			#BOOL Display AN
-	rearcam_trigger = False			#Ruckfahrkamera ist aktiv
-	lightswitch_trigger = False		#Licht ist aktiv
-	wait_time = int(addon.getSetting('wait_time'))		#Wartezeit bei Tankstop in Sekunden
+	power_display = True				#BOOL Display AN
+	rearcam_trigger = False				#Ruckfahrkamera ist aktiv
+	lightswitch_trigger = False			#Licht ist aktiv
+	wait_time = int(addon.getSetting('wait_time'))	#Wartezeit bei Tankstop in Sekunden
 	laststate_play = False
 	
 	def __init__(self):
