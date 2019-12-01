@@ -11,23 +11,23 @@ __addonpath__ = __addon__.getAddonInfo('path').decode("utf-8")
 addon = xbmcaddon.Addon(id='plugin.service.carpcButler')
 
 OUT_LED_RUN_PIN		= int(addon.getSetting('out_led_run_pin'))		#Anzeige Pi lauft  
-IN_IGN_PIN		= int(addon.getSetting('in_ign_pin'))			#Signal Zundung ist an
+IN_IGN_PIN			= int(addon.getSetting('in_ign_pin'))			#Signal Zundung ist an
 IN_LIGHT_PIN		= int(addon.getSetting('in_light_pin'))			#Signal Dammerungsschalter
 IN_REVERSE_PIN		= int(addon.getSetting('in_reverse_pin'))		#Signal Ruckwartsgang
 OUT_BACKUP_IGN_PIN	= int(addon.getSetting('out_backup_ign_pin'))	#Ausgang Uberbruckung Spannungsversorgung
-OUT_PWR_DISPLAY		= int(addon.getSetting('out_pwr_display'))		#Display Hintergrundbeleuchtung -> Soll nach gewisser Zeit ausschalten wenn in uberbruckung
-OUT_AMP_CONTROL		= int(addon.getSetting('out_amp_control'))		#Ausgang fur Verstarker remote
+OUT_PWR_DISPLAY_PIN	= int(addon.getSetting('out_pwr_display'))		#Display Hintergrundbeleuchtung -> Soll nach gewisser Zeit ausschalten wenn in uberbruckung
+OUT_AMP_CONTROL_PIN	= int(addon.getSetting('out_amp_control'))		#Ausgang fur Verstarker remote
 
 class Main(object):
 	ignore_ign = False				#BOOL Ignoriere Herrunterfahren	
-	run = True					#BOOL thread soll laufen
+	run = True						#BOOL thread soll laufen
 	stopped = False					#BOOL thread beendet 
 	power_dialog = None				#Meldefenster in Kodi
 	power_dialog_pass = False
-	power_display = True				#BOOL Display AN
-	rearcam_trigger = False				#Ruckfahrkamera ist aktiv
-	lightswitch_trigger = False			#Licht ist aktiv
-	wait_time = int(addon.getSetting('wait_time'))	#Wartezeit bei Tankstop in Sekunden
+	power_display = True			#BOOL Display AN
+	rearcam_trigger = False			#Ruckfahrkamera ist aktiv
+	lightswitch_trigger = False		#Licht ist aktiv
+	wait_time = int(addon.getSetting('wait_time'))		#Wartezeit bei Tankstop in Sekunden
 	laststate_play = False
 	
 	def __init__(self):
@@ -37,7 +37,10 @@ class Main(object):
 		self.thread = Thread(target=self.gpio_checker)
 		self.thread.setDaemon(True)
 		self.thread.start()
-		self.output_control("amp_control", "on", OUT_AMP_CONTROL)
+		time.sleep(0.1)
+		self.display_control("on")
+		self.output_control("amp_control", "on", OUT_AMP_CONTROL_PIN)
+		self.output_control("allways_true", "on", OUT_BACKUP_IGN_PIN)
 		monitor = xbmc.Monitor()
 		monitor.waitForAbort() #laut Wiki bleibt hier die Schleife stehen bis Kodi beendet wird
 		self.run = False
@@ -49,17 +52,18 @@ class Main(object):
 		
 	def gpio_checker(self):	
 		xbmc.log("CarPCButler: Checker Thread started! %s" %time.time(), level=xbmc.LOGNOTICE)
-		GPIO.setmode(GPIO.BCM)
 		#Setup der GPIOs
+		GPIO.setmode(GPIO.BCM)
 		#Inputs
 		GPIO.setup(IN_IGN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(IN_REVERSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(IN_LIGHT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		#Outputs
 		GPIO.setup(OUT_BACKUP_IGN_PIN, GPIO.OUT)
-		GPIO.setup(OUT_PWR_DISPLAY, GPIO.OUT)
+		GPIO.setup(OUT_PWR_DISPLAY_PIN, GPIO.OUT)
 		GPIO.setup(OUT_LED_RUN_PIN, GPIO.OUT)
-		GPIO.setup(OUT_AMP_CONTROL, GPIO.OUT)
+		GPIO.setup(OUT_AMP_CONTROL_PIN, GPIO.OUT)
+
 		
 		while self.run:
 			power = GPIO.input(IN_IGN_PIN)
@@ -100,7 +104,7 @@ class Main(object):
 		if power_dialog: #Wenn "Ja warte" gedruckt wird warte 10Min mit dem herrunterfahren
 			xbmc.log("shut down paused by User! %s" %time.time(), level=xbmc.LOGNOTICE)
 			self.display_control("off")
-			self.output_control("amp_control", "off", OUT_AMP_CONTROL)
+			self.output_control("amp_control", "off", OUT_AMP_CONTROL_PIN)
 			p = 0
 			while self.wait_time > p:
 				if GPIO.input(IN_IGN_PIN) == True: #Wenn die Zundung innerhalb der 10Min wieder da ist, breche die Schleife ab
@@ -117,7 +121,7 @@ class Main(object):
 				self.shut_down()
 			else:
 				self.display_control("on")
-				self.output_control("amp_control", "on", OUT_AMP_CONTROL)
+				self.output_control("amp_control", "on", OUT_AMP_CONTROL_PIN)
 				self.ignore_ign = False
 				wb_dialog = xbmcgui.Dialog()
 				wb_dialog.notification("$ADDON[plugin.service.carpcButler 30000]", "$ADDON[plugin.service.carpcButler 30006]", xbmcgui.NOTIFICATION_INFO, 5000)
@@ -132,7 +136,7 @@ class Main(object):
 					
 	def shut_down(self):
 		xbmc.log("CarPCButler: Shut down Pi! %s" %time.time(), level=xbmc.LOGWARNING)
-		self.output_control("amp_control", "off", OUT_AMP_CONTROL)
+		self.output_control("amp_control", "off", OUT_AMP_CONTROL_PIN)
 		self.display_control("off")
 		os.system("sudo shutdown -h now")
 
@@ -210,25 +214,31 @@ class Main(object):
 		if str(addon.getSetting(output_setting)) == "true":
 			if output_mode == "on" and GPIO.input(output_no) == False:
 				GPIO.output(output_no, GPIO.HIGH)
-			if output_mode == "off" and GPIO.input(output_no) == True:
+			elif output_mode == "off" and GPIO.input(output_no) == True:
 				GPIO.output(output_no, GPIO.LOW)
-			if output_mode == "toggle" and GPIO.input(output_no) == True:
+			elif output_mode == "on" and GPIO.input(output_no) == True:
+				pass
+			elif output_mode == "off" and GPIO.input(output_no) == False:
+				pass
+			elif output_mode == "toggle" and GPIO.input(output_no) == True:
 				GPIO.output(output_no, GPIO.LOW)
-			if output_mode == "toggle" and GPIO.input(output_no) == False:
+				time.sleep(0.1)
+			elif output_mode == "toggle" and GPIO.input(output_no) == False:
 				GPIO.output(output_no, GPIO.HIGH)
+				time.sleep(0.1)
 		else:
 			pass
 		
 	def display_control(self, display_mode):
 		if str(addon.getSetting('display_hard_mode')) == "true":
-			if display_mode == "off" and GPIO.input(OUT_PWR_DISPLAY) == True:
-				GPIO.output(OUT_PWR_DISPLAY, GPIO.LOW)
-			if display_mode == "on" and GPIO.input(OUT_PWR_DISPLAY) == False:
-				GPIO.output(OUT_PWR_DISPLAY, GPIO.HIGH)
+			if display_mode == "off" and GPIO.input(OUT_PWR_DISPLAY_PIN) == True:
+				GPIO.output(OUT_PWR_DISPLAY_PIN, GPIO.LOW)
+			if display_mode == "on" and GPIO.input(OUT_PWR_DISPLAY_PIN) == False:
+				GPIO.output(OUT_PWR_DISPLAY_PIN, GPIO.HIGH)
 		else:
-			if display_mode == "off" and self.power_back == False:
+			if display_mode == "off":
 				subprocess.call(["vcgencmd", "display_power", "0"])
-			if display_mode == "on" and self.power_back == True:
+			if display_mode == "on":
 				subprocess.call(["vcgencmd", "display_power", "1"])
 
 	
