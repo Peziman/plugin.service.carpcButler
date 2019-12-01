@@ -51,3 +51,75 @@ msgstr "Plugin PiDash nicht installiert!"
 msgctxt "#30008"
 msgid "Plugin xTouch not installed!"
 msgstr "Plugin xTouch nicht installiert!"
+
+msgctxt "#30100"
+msgid "Power"
+msgstr "Power"
+
+msgctxt "#30101"
+msgid "Display"
+msgstr "Bildschirm"
+
+msgctxt "#30102"
+msgid "Light"
+msgstr "Licht"
+
+msgctxt "#30103"
+msgid "Rearcam"
+msgstr "Rearcam"
+
+msgctxt "#30104"
+msgid "Others"
+msgstr "Sonstiges"
+
+msgctxt "#30105"
+msgid "Maximal Standby Time in sec"
+msgstr "Maximale Standby Zeit in s"
+
+msgctxt "#30106"
+msgid "Day-Night Function"
+msgstr "Tag-Nacht Umschaltung"
+
+msgctxt "#30107"
+msgid "Rearcam"
+msgstr "Rückfahrkamera"
+
+msgctxt "#30108"
+msgid "GPIO Input Ignition"
+msgstr "GPIO Eingang Zündung"
+
+msgctxt "#30109"
+msgid "GPIO Output Power-bridging"
+msgstr "GPIO Ausgang Power Überbrückung"
+
+msgctxt "#30110"
+msgid "Display Controlled By Hardware"
+msgstr "Display Hardware gesteuert"
+
+msgctxt "#30111"
+msgid "GPIO Output Display Standby (only values 2-27!)"
+msgstr "GPIO Ausgang Display Standby (Nur Werte 2-27!)"
+
+msgctxt "#30112"
+msgid "GPIO Input Lightswitch"
+msgstr "GPIO Eingang Lichtschaltung"
+
+msgctxt "#30113"
+msgid "GPIO Input Reverse Gear Switch"
+msgstr "GPIO Eingang Rückwärtsgang Schalter"
+
+msgctxt "#30114"
+msgid "Power LED Function"
+msgstr "Power LED Funktion"
+
+msgctxt "#30115"
+msgid "GPIO Output Power LED"
+msgstr "GPIO Ausgang Power LED"
+
+msgctxt "#30116"
+msgid "Amp Control Function"
+msgstr "Verstärker Steuerung Funktion"
+
+msgctxt "#30117"
+msgid "GPIO Output Amp Control"
+msgstr "GPIO Ausgang Verstärker Steuerung"
