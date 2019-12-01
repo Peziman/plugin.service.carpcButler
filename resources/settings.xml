@@ -1,0 +1,26 @@
+<settings>
+    <category label="30100">
+        <setting id="wait_time" type ="number" label="30105" default="600" />
+		<setting id="in_ign_pin" type ="select" label="30108" default="15" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+		<setting id="out_backup_ign_pin" type ="select" label="30109" default="20" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+    </category>
+    <category label="30101">
+		<setting id="display_hard_mode" type ="bool" label="30110" default="false" />
+		<setting id="out_pwr_display" type ="select" label="30111" default="24" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+
+    </category>
+    <category label="30102">
+        <setting id="option_light" type ="bool" label="30106" default="false" />
+		<setting id="in_light_pin" type ="select" label="30112" default="17" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+    </category>
+    <category label="30103">
+		<setting id="option_rearcam" type ="bool" label="30107" default="false" />
+		<setting id="in_reverse_pin" type ="select" label="30113" default="18" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+    </category>
+    <category>
+		<setting id="option_power_led" type ="bool" label="30114" default="false" />
+		<setting id="out_led_run_pin" type ="select" label="30115" default="4" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+		<setting id="amp_control" type ="bool" label="30116" default="false" />
+		<setting id="out_amp_control" type ="select" label="30117" default="25" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+	</category>
+</settings>
