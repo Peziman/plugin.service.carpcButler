@@ -1,4 +1,4 @@
-<settings>
+settings>
     <category label="30100">
         <setting id="wait_time" type ="number" label="30105" default="600" />
 		<setting id="in_ign_pin" type ="select" label="30108" default="15" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
@@ -22,5 +22,6 @@
 		<setting id="out_led_run_pin" type ="select" label="30115" default="4" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
 		<setting id="amp_control" type ="bool" label="30116" default="false" />
 		<setting id="out_amp_control" type ="select" label="30117" default="25" values="2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27" />
+		<setting id="allways_true" type ="bool" default="true" visble="false" />
 	</category>
 </settings>
